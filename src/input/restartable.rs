@@ -232,7 +232,7 @@ where
         if let Some(time) = time {
             let ts = format!("{:.3}", time.as_secs_f64());
 
-            _ytdl(self.uri.as_ref(), &["-ss", &ts]).await
+            _ytdl(self.uri.as_ref(), &["-ss", &ts], &[]).await
         } else {
             ytdl(self.uri.as_ref()).await
         }

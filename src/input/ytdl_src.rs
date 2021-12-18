@@ -33,10 +33,15 @@ const YOUTUBE_DL_COMMAND: &str = if cfg!(feature = "youtube-dlc") {
 ///
 /// [`Restartable::ytdl`]: crate::input::restartable::Restartable::ytdl
 pub async fn ytdl(uri: impl AsRef<str>) -> Result<Input> {
-    _ytdl(uri.as_ref(), &[]).await
+    _ytdl(uri.as_ref(), &[], &[]).await
 }
 
-pub(crate) async fn _ytdl(uri: &str, pre_args: &[&str]) -> Result<Input> {
+/// TODO
+pub async fn ytdl_ffmpeg_args(uri: impl AsRef<str>, pre_args: &[&str], post_args: &[&str]) -> Result<Input> {
+    _ytdl(uri.as_ref(), pre_args, post_args).await
+}
+
+pub(crate) async fn _ytdl(uri: &str, pre_args: &[&str], post_args: &[&str]) -> Result<Input> {
     let ytdl_args = [
         "--print-json",
         "-f",
@@ -60,7 +65,6 @@ pub(crate) async fn _ytdl(uri: &str, pre_args: &[&str]) -> Result<Input> {
         "48000",
         "-acodec",
         "pcm_f32le",
-        "-",
     ];
 
     let mut youtube_dl = Command::new(YOUTUBE_DL_COMMAND)
@@ -102,6 +106,8 @@ pub(crate) async fn _ytdl(uri: &str, pre_args: &[&str]) -> Result<Input> {
         .arg("-i")
         .arg("-")
         .args(&ffmpeg_args)
+        .args(post_args)
+        .arg("-")
         .stdin(taken_stdout)
         .stderr(Stdio::null())
         .stdout(Stdio::piped())

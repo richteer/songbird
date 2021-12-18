@@ -80,7 +80,7 @@ use utils as test_utils;
 pub use crate::{
     driver::Driver,
     events::{CoreEvent, Event, EventContext, EventHandler, TrackEvent},
-    input::{ffmpeg, ytdl},
+    input::{ffmpeg, ytdl, ytdl_ffmpeg_args},
     tracks::create_player,
 };
 
